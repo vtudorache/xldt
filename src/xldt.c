@@ -251,10 +251,9 @@ serial_as_weekday(long serial, long type)
     ** Since the 1st January 2001 was a Monday and 2001 is a first year of
     ** a cycle, BASE_YEAR (which must be a first year of a cycle) has the
     ** 1st January on a Monday.
+    ** It is at BASE_OFFSET days before the date represented by serial 1.
     */
-    long base = 1, days;
-    /* Translate to absolute serial (where 1 is 1st January of BASE_YEAR) */
-    serial += BASE_OFFSET;
+    long base = 1 - BASE_OFFSET, days;
     /* Translate the base according to the required result type. */
     if (type == SUN_1) {
         base -= 1;
