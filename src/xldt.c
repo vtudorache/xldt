@@ -703,14 +703,14 @@ static PyMethodDef xldt_methods[] = {
 
 static struct PyModuleDef xldt_module = {
     PyModuleDef_HEAD_INIT,
-    "xldt",
+    "_xldt",
     xldt__doc__,
     -1,
    xldt_methods
 };
 
 PyMODINIT_FUNC 
-PyInit_xldt(void) {
+PyInit__xldt(void) {
     PyObject *xldt = PyModule_Create(&xldt_module);   
     add_week_types(xldt);
     add_weekend_types(xldt);

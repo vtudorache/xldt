@@ -1,13 +1,25 @@
-from distutils.core import setup, Extension
+import setuptools
 
-def main():
-    setup(name="xldt",
+xldt_description = None
+
+with open("README.md", "r", encoding="utf-8") as f:
+    xldt_description = f.read()
+
+setuptools.setup(name="xldt",
         version="0.1.0",
-        description="Excel-compatible date and time functions.",
         author="Vlad Tudorache",
         author_email="tudorache.vlad@gmail.com",
-        ext_modules=[Extension("xldt", ["src/xldt.c"])]
+        description="Excel-compatible date and time functions.",
+        long_description=xldt_description,
+        long_description_content_type="text/markdown",
+        url="https://github.com/vtudorache/xldt",
+        classifiers=[
+            "Programming Language :: Python :: 3",
+            "License :: OSI Approved :: MIT License",
+            "Operating System :: OS Independent",
+        ],
+        package_dir={"": "src"},
+        packages=setuptools.find_packages(where="src"),
+        ext_modules=[setuptools.Extension("xldt._xldt", ["src/xldt.c"])],
+        python_requires=">=3.6"
     )
-
-if __name__ == "__main__":
-    main()
