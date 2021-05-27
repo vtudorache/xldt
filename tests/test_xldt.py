@@ -15,6 +15,15 @@ class TestDateValue(unittest.TestCase):
             self.assertEqual(n, xldt.date(y, m, d), 
                 'error at {:04d}-{:02d}-{:02d}'.format(y, m, d))
     
+    def test_time(self):
+        for n in range(0, 86400):
+            t = n / 86400
+            h = xldt.hour(t)
+            m = xldt.minute(t)
+            s = xldt.second(t)
+            self.assertEqual(n, round(xldt.time(h, m, s) * 86400), 
+                'error at {:02d}:{:02d}:{:02d}'.format(h, m, s))
+
     def test_date_csv(self):
         with open(os.path.join(ROOT, 'data/date.csv'), newline='') as src:
             reader = csv.DictReader(src, delimiter=';')

@@ -33,12 +33,24 @@ PyDoc_STRVAR(xldt_isweekend__doc__,
 "isweekend(value: float, result_type: int) -> bool\n\n\
 Return True if the date corresponding to the given value is a weekend.\n\
 The optional result_type argument controls which of the days in a week\n\
-are considered weekend. It can take on any of the constants WE_SAT_SUN,\n\
-WE_SUN_MON, WE_MON_TUE, WE_TUE_WED, WE_WED_THU, WE_THU_FRI, WE_FRI_SAT,\n\
-WE_SUN, WE_MON, WE_TUE, WE_WED, WE_THU, WE_FRI, WE_SAT.\n\
-The result_type can also be a seven characters string, each character\n\
-can be 1 (weekend) or 0 (workday).\n\
-The result type defaults to WE_SAT_SUN.\n\
+are considered weekend. It can take on any of the constants:\n\
+* WE_SAT_SUN - Saturday and Sunday are weekend (this is the default)\n\
+* WE_SUN_MON - Sunday and Monday are weekend\n\
+* WE_MON_TUE - Monday and Tuesday are weekend\n\
+* WE_TUE_WED - Tuesday and Wednesday are weekend\n\
+* WE_WED_THU - Wednesday and Thursday are weekend\n\
+* WE_THU_FRI - Thursday and Friday are weekend\n\
+* WE_FRI_SAT - Friday and Saturday are weekend\n\
+* WE_SUN - Only Sunday is weekend\n\
+* WE_MON - Only Monday is weekend\n\
+* WE_TUE - Only Tuesday is weekend\n\
+* WE_WED - Only Wednesday is weekend\n\
+* WE_THU - Only Thursday is weekend\n\
+* WE_FRI - Only Friday is weekend\n\
+* WE_SAT - Only Saturday is weekend\n\
+The result_type can also be a seven character string representing the\n\
+days of the week starting with Monday, each character can be 1 for the\n\
+weekend or 0 for a workday.\n\
 The values of the constants are identical to those used by Excel with\n\
 WORKDAY.INTL and could be used to implement equivalent functions in\n\
 Python.");
@@ -46,7 +58,7 @@ Python.");
 PyDoc_STRVAR(xldt_isoweek__doc__,
 "isoweek(serial: float) -> int\n\n\
 Return the ISO week number of the year for a given date.\n\
-It behaves like the Excel ISOWEEKNUM function.");
+It behaves like Excel's ISOWEEKNUM function.");
 
 PyDoc_STRVAR(xldt_minute__doc__,
 "minute(value: float) -> int\n\n\
@@ -82,12 +94,15 @@ PyDoc_STRVAR(xldt_week__doc__,
 "week(serial: float, result_type: int) -> int\n\n\
 Return the week number corresponding to the given serial number. The\n\
 result_type argument is optional, defaulting to 1.\n\
-It behaves like the Excel WEEKNUM function.");
+It behaves like Excel's WEEKNUM function, accepting identical values\n\
+for the result_type parameter.");
 
 PyDoc_STRVAR(xldt_weekday__doc__,
 "weekday(value: float, result_type: float) -> int\n\n\
 Return the weekday corresponding to the given value. The result_type\n\
-argument is optional, defaulting to 1.");
+argument is optional, defaulting to 1.\n\
+It behaves like Excel's WEEKDAY function, accepting identical values for\n\
+the result_type parameter.");
 
 PyDoc_STRVAR(xldt_year__doc__,
 "year(value: float) -> int\n\n\
