@@ -7,7 +7,7 @@
 
 PyDoc_STRVAR(xldt__doc__,
 "Excel compatible date and time helper functions for Python.\n\n\
-This extension handles date and time using serial numbers, just like\n\
+This module handles date and time by using serial numbers, just like\n\
 Microsoft Excel. The serial numbers are identical between this module\n\
 and Excel for dates starting with 1900-03-01 in the 1900 date system.");
 
