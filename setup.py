@@ -5,7 +5,7 @@ xldt_description = None
 with open("README.md", "r", encoding="utf-8") as f:
     xldt_description = f.read()
 
-KEYWORDS = ["python", "excel", "date", "time"]
+xldt_keywords = ["python", "excel", "date", "time"]
 
 setuptools.setup(name="xldt",
         version="0.0.2",
@@ -17,9 +17,10 @@ setuptools.setup(name="xldt",
         url="https://github.com/vtudorache/xldt",
         classifiers=[
             "Programming Language :: Python :: 3",
+            "Programming Language :: C",
             "License :: OSI Approved :: MIT License"
         ],
-        keywords = " ".join(KEYWORDS),
+        keywords = " ".join(xldt_keywords),
         package_dir={"xldt": "src/xldt"},
         packages=["xldt"],
         ext_modules=[setuptools.Extension("xldt._xldt", ["src/xldt.c"])],
