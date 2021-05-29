@@ -7,7 +7,7 @@
 
 PyDoc_STRVAR(xldt__doc__,
 "Excel compatible date and time helper functions for Python.\n\n\
-This module handles date and time by using serial numbers, just like\n\
+This module manipulates date and time by using serial numbers, like\n\
 Microsoft Excel. The serial numbers are identical between this module\n\
 and Excel for dates starting with 1900-03-01 in the 1900 date system.");
 
@@ -93,16 +93,39 @@ Return the value corresponding to the current date (without time).");
 PyDoc_STRVAR(xldt_week__doc__,
 "week(serial: float, result_type: int) -> int\n\n\
 Return the week number corresponding to the given serial number. The\n\
-result_type argument is optional, defaulting to 1.\n\
-It behaves like Excel's WEEKNUM function, accepting identical values\n\
-for the result_type parameter.");
+result_type argument is optional. It can take on any of the constants:\n\
+* SUN_1 - The week begins on Sunday (this is the default)\n\
+* MON_1 - The week begins on Monday\n\
+* MON_1_EXT - The week begins on Monday\n\
+* TUE_1_EXT - The week begins on Tuesday\n\
+* WED_1_EXT - The week begins on Wednesday\n\
+* THU_1_EXT - The week begins on Thursday\n\
+* FRI_1_EXT - The week begins on Friday\n\
+* SAT_1_EXT - The week begins on Saturday\n\
+* SUN_1_EXT - The week begins on Sunday\n\
+For the constants above, the first week of the year (numbered 1) is the\n\
+week containing the 1st January.\n\
+* MON_2 - The week begins on Monday\n\
+For the constant MON_2, the week containing the first Thursday of the\n\
+year is the first week of the year and is numbered as week 1.\n\
+This function behaves like Excel's WEEKNUM function.");
 
 PyDoc_STRVAR(xldt_weekday__doc__,
 "weekday(value: float, result_type: float) -> int\n\n\
 Return the weekday corresponding to the given value. The result_type\n\
-argument is optional, defaulting to 1.\n\
-It behaves like Excel's WEEKDAY function, accepting identical values for\n\
-the result_type parameter.");
+argument is optional. It can take on any of the constants:\n\
+* SUN_1 - The week begins on Sunday (this is the default)\n\
+* MON_1 - The week begins on Monday\n\
+* MON_1_EXT - The week begins on Monday\n\
+* TUE_1_EXT - The week begins on Tuesday\n\
+* WED_1_EXT - The week begins on Wednesday\n\
+* THU_1_EXT - The week begins on Thursday\n\
+* FRI_1_EXT - The week begins on Friday\n\
+* SAT_1_EXT - The week begins on Saturday\n\
+* SUN_1_EXT - The week begins on Sunday\n\
+For the constants above, the first day of the week is numbered 1.\n\
+* MON_0 - The week begins on Monday. The first day is numbered 0.\n\
+This function behaves like Excel's WEEKDAY function.");
 
 PyDoc_STRVAR(xldt_year__doc__,
 "year(value: float) -> int\n\n\
