@@ -8,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 xldt_keywords = ["python", "excel", "date", "time"]
 
 setuptools.setup(name="xldt",
-    version="0.0.4",
+    version="0.0.5",
     author="Vlad Tudorache",
     author_email="tudorache.vlad@gmail.com",
     description="Excel-compatible date and time functions.",
