@@ -366,20 +366,32 @@ xldt_day(PyObject *self, PyObject *args)
     return PyLong_FromLong(day);
 }
 
-static void
+static PyObject *
 add_week_types(PyObject *module)
 {
-    PyModule_AddIntMacro(module, SUN_1);
-    PyModule_AddIntMacro(module, MON_1);
-    PyModule_AddIntMacro(module, MON_0);
-    PyModule_AddIntMacro(module, MON_1_EXT);
-    PyModule_AddIntMacro(module, TUE_1_EXT);
-    PyModule_AddIntMacro(module, WED_1_EXT);
-    PyModule_AddIntMacro(module, THU_1_EXT);
-    PyModule_AddIntMacro(module, FRI_1_EXT);
-    PyModule_AddIntMacro(module, SAT_1_EXT);
-    PyModule_AddIntMacro(module, SUN_1_EXT);
-    PyModule_AddIntMacro(module, MON_2);
+    if (module == NULL) {
+        return NULL;
+    }
+    if (PyModule_AddIntMacro(module, SUN_1) < 0 ||
+        PyModule_AddIntMacro(module, MON_1) < 0 ||
+        PyModule_AddIntMacro(module, MON_0) < 0 ||
+        PyModule_AddIntMacro(module, MON_2) < 0)
+    {
+        Py_DECREF(module);
+        return NULL;
+    }
+    if (PyModule_AddIntMacro(module, MON_1_EXT) < 0 ||
+        PyModule_AddIntMacro(module, TUE_1_EXT) < 0 ||
+        PyModule_AddIntMacro(module, WED_1_EXT) < 0 ||
+        PyModule_AddIntMacro(module, THU_1_EXT) < 0 ||
+        PyModule_AddIntMacro(module, FRI_1_EXT) < 0 ||
+        PyModule_AddIntMacro(module, SAT_1_EXT) < 0 ||
+        PyModule_AddIntMacro(module, SUN_1_EXT) < 0)
+    {
+        Py_DECREF(module);
+        return NULL;
+    }
+    return module;
 }
 
 static PyObject *
@@ -611,23 +623,35 @@ xldt_isoweek(PyObject *self, PyObject *args)
 #define WE_FRI 16
 #define WE_SAT 17
 
-static void
+static PyObject *
 add_weekend_types(PyObject *module)
 {
-    PyModule_AddIntMacro(module, WE_SAT_SUN);
-    PyModule_AddIntMacro(module, WE_SUN_MON);
-    PyModule_AddIntMacro(module, WE_MON_TUE);
-    PyModule_AddIntMacro(module, WE_TUE_WED);
-    PyModule_AddIntMacro(module, WE_WED_THU);
-    PyModule_AddIntMacro(module, WE_THU_FRI);
-    PyModule_AddIntMacro(module, WE_FRI_SAT);
-    PyModule_AddIntMacro(module, WE_SUN);
-    PyModule_AddIntMacro(module, WE_MON);
-    PyModule_AddIntMacro(module, WE_TUE);
-    PyModule_AddIntMacro(module, WE_WED);
-    PyModule_AddIntMacro(module, WE_THU);
-    PyModule_AddIntMacro(module, WE_FRI);
-    PyModule_AddIntMacro(module, WE_SAT);
+    if (module == NULL) {
+        return NULL;
+    }
+    if (PyModule_AddIntMacro(module, WE_SAT_SUN) < 0 ||
+        PyModule_AddIntMacro(module, WE_SUN_MON) < 0 ||
+        PyModule_AddIntMacro(module, WE_MON_TUE) < 0 ||
+        PyModule_AddIntMacro(module, WE_TUE_WED) < 0 ||
+        PyModule_AddIntMacro(module, WE_WED_THU) < 0 ||
+        PyModule_AddIntMacro(module, WE_THU_FRI) < 0 ||
+        PyModule_AddIntMacro(module, WE_FRI_SAT) < 0)
+    {
+        Py_DECREF(module);
+        return NULL;
+    }
+    if (PyModule_AddIntMacro(module, WE_SUN) < 0 ||
+        PyModule_AddIntMacro(module, WE_MON) < 0 ||
+        PyModule_AddIntMacro(module, WE_TUE) < 0 ||
+        PyModule_AddIntMacro(module, WE_WED) < 0 ||
+        PyModule_AddIntMacro(module, WE_THU) < 0 ||
+        PyModule_AddIntMacro(module, WE_FRI) < 0 ||
+        PyModule_AddIntMacro(module, WE_SAT) < 0)
+    {
+        Py_DECREF(module);
+        return NULL;
+    }
+    return module;
 }
 
 static PyObject *
@@ -680,6 +704,72 @@ xldt_isweekend(PyObject *self, PyObject *args)
     return NULL;
 }
 
+typedef struct {
+    PyFloatObject super;
+    long bpack;
+} xldt_WrapperObject;
+
+static PyTypeObject Wrapper_Type = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+};
+
+static PyObject *
+Wrapper_year(PyObject *self, PyObject *args)
+{
+    long year = (((xldt_WrapperObject *)self)->bpack) >> 9;
+    return PyLong_FromLong(year);
+}
+
+static PyMethodDef Wrapper_methods[] = {
+    {"year", Wrapper_year, METH_NOARGS, NULL},
+    {NULL, NULL, 0, NULL}
+};
+
+static PyObject *
+Wrapper__new__(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    double value;
+    long day, month, year;
+    PyObject *self;
+    char *kwlist[] = {"value", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "d", kwlist, &value)) {
+        return NULL;
+    }
+    self = type->tp_alloc(type, 0);
+    if (self != NULL) {
+        xldt_WrapperObject *p = (xldt_WrapperObject *)self;
+        ((PyFloatObject *)self)->ob_fval = value;
+        serial_to_date(x_floor(value), &year, &month, &day);
+        p->bpack = (year << 9) | (month << 5) | day;
+    }
+    return self;
+}
+
+static PyObject *
+Wrapper_create(PyObject *module)
+{
+    Wrapper_Type.tp_name = "_xldt.Wrapper";
+    Wrapper_Type.tp_base = &PyFloat_Type;
+    Wrapper_Type.tp_doc = NULL;
+    Wrapper_Type.tp_basicsize = sizeof(xldt_WrapperObject);
+    Wrapper_Type.tp_itemsize = 0;
+    Wrapper_Type.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
+    Wrapper_Type.tp_new = Wrapper__new__;
+    Wrapper_Type.tp_methods = Wrapper_methods;
+    if (PyType_Ready(&Wrapper_Type) < 0) {
+        return NULL;
+    }
+    Py_INCREF(&Wrapper_Type);
+    if (PyModule_AddObject(module, "Wrapper", 
+                           (PyObject *)&Wrapper_Type) < 0) 
+    {
+        Py_DECREF(&Wrapper_Type);
+        Py_DECREF(module);
+        return NULL;
+    }
+    return module;
+};
+
 static PyMethodDef xldt_methods[] = {
     {"date", xldt_date, METH_VARARGS, xldt_date__doc__},
     {"day", xldt_day, METH_VARARGS, xldt_day__doc__},
@@ -702,17 +792,27 @@ static PyMethodDef xldt_methods[] = {
 };
 
 static struct PyModuleDef xldt_module = {
-    PyModuleDef_HEAD_INIT,
-    "_xldt",
-    xldt__doc__,
-    -1,
-   xldt_methods
+    PyModuleDef_HEAD_INIT
 };
+
+static PyObject *
+xldt_create(void)
+{
+    xldt_module.m_name = "_xldt";
+    xldt_module.m_doc = xldt__doc__;
+    xldt_module.m_size = -1;
+    xldt_module.m_methods = xldt_methods;
+    return PyModule_Create(&xldt_module);
+}
 
 PyMODINIT_FUNC 
 PyInit__xldt(void) {
-    PyObject *xldt = PyModule_Create(&xldt_module);   
-    add_week_types(xldt);
-    add_weekend_types(xldt);
+    PyObject *xldt = xldt_create();
+    if (add_week_types(xldt) == NULL || 
+        add_weekend_types(xldt) == NULL ||
+        Wrapper_create(xldt) == NULL) 
+    {
+        return NULL;
+    }
     return xldt;
 }
