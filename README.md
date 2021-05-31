@@ -27,8 +27,8 @@ pip install build
 ```
 Then, in the source directory, run:
 ```
-pip -m build
+python -m build
 ```
-A `dist` directory will be created, containing a _wheel_ for the target
-platform. The _wheel_ can be then installed from the `dist` directory
+A "dist" directory will be created, containing a _wheel_ for the target
+platform. The _wheel_ can be then installed from the "dist" directory
 with _pip_.
