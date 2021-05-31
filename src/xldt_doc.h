@@ -138,18 +138,18 @@ the given values.");
 
 PyDoc_STRVAR(Wrapper__doc__,
 "Create an object allowing to extract date and time parts corresponding\n\
-to the contained value.");
+to the internal value.");
 
 PyDoc_STRVAR(Wrapper_year__doc__,
 "year(self)\n\n\
-Return the year corresponding to the contained value.");
+Return the year corresponding to the internal value.");
 
 PyDoc_STRVAR(Wrapper_month__doc__,
 "month(self)\n\n\
-Return the month corresponding to the contained value.");
+Return the month corresponding to the internal value.");
 
 PyDoc_STRVAR(Wrapper_day__doc__,
 "day(self)\n\n\
-Return the day corresponding to the contained value.");
+Return the day corresponding to the internal value.");
 
 #endif
