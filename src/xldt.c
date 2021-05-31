@@ -728,17 +728,12 @@ static PyMethodDef Wrapper_methods[] = {
 static PyObject *
 Wrapper__new__(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
-    double value;
     long day, month, year;
-    PyObject *self;
-    char *kwlist[] = {"value", NULL};
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "d", kwlist, &value)) {
-        return NULL;
-    }
-    self = type->tp_alloc(type, 0);
+    PyObject *self = type->tp_base->tp_new(type, args, kwds);
     if (self != NULL) {
+        double value;
         xldt_WrapperObject *p = (xldt_WrapperObject *)self;
-        ((PyFloatObject *)self)->ob_fval = value;
+        value = PyFloat_AsDouble(self);
         serial_to_date(x_floor(value), &year, &month, &day);
         p->bpack = (year << 9) | (month << 5) | day;
     }
