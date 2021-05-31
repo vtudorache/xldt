@@ -720,8 +720,24 @@ Wrapper_year(PyObject *self, PyObject *args)
     return PyLong_FromLong(year);
 }
 
+static PyObject *
+Wrapper_month(PyObject *self, PyObject *args)
+{
+    long month = ((((xldt_WrapperObject *)self)->bpack) >> 5) & 0x0f;
+    return PyLong_FromLong(month);
+}
+
+static PyObject *
+Wrapper_day(PyObject *self, PyObject *args)
+{
+    long day = (((xldt_WrapperObject *)self)->bpack) & 0x1f;
+    return PyLong_FromLong(day);
+}
+
 static PyMethodDef Wrapper_methods[] = {
-    {"year", Wrapper_year, METH_NOARGS, NULL},
+    {"year", Wrapper_year, METH_NOARGS, Wrapper_year__doc__},
+    {"month", Wrapper_month, METH_NOARGS, Wrapper_month__doc__},
+    {"day", Wrapper_day, METH_NOARGS, Wrapper_day__doc__},
     {NULL, NULL, 0, NULL}
 };
 
@@ -745,7 +761,7 @@ Wrapper_create(PyObject *module)
 {
     Wrapper_Type.tp_name = "_xldt.Wrapper";
     Wrapper_Type.tp_base = &PyFloat_Type;
-    Wrapper_Type.tp_doc = NULL;
+    Wrapper_Type.tp_doc = Wrapper__doc__;
     Wrapper_Type.tp_basicsize = sizeof(xldt_WrapperObject);
     Wrapper_Type.tp_itemsize = 0;
     Wrapper_Type.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
