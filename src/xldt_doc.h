@@ -136,20 +136,4 @@ PyDoc_STRVAR(xldt_years__doc__,
 Calculate the number of full years between the dates corresponding to\n\
 the given values.");
 
-PyDoc_STRVAR(Wrapper__doc__,
-"Create an object allowing to extract date and time parts corresponding\n\
-to the internal value.");
-
-PyDoc_STRVAR(Wrapper_year__doc__,
-"year(self)\n\n\
-Return the year corresponding to the internal value.");
-
-PyDoc_STRVAR(Wrapper_month__doc__,
-"month(self)\n\n\
-Return the month corresponding to the internal value.");
-
-PyDoc_STRVAR(Wrapper_day__doc__,
-"day(self)\n\n\
-Return the day corresponding to the internal value.");
-
 #endif

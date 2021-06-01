@@ -1,4 +1,4 @@
-# xldt - Excel-compatible date and time functions
+# Excel-compatible date and time functions
 
 The _xldt_ module manipulates date and time by using sequential serial
 numbers, like Microsoft Excel. The serial numbers are identical between

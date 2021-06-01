@@ -704,83 +704,6 @@ xldt_isweekend(PyObject *self, PyObject *args)
     return NULL;
 }
 
-typedef struct {
-    PyFloatObject super;
-    long bpack;
-} xldt_WrapperObject;
-
-static PyTypeObject Wrapper_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-};
-
-static PyObject *
-Wrapper_year(PyObject *self, PyObject *args)
-{
-    long year = (((xldt_WrapperObject *)self)->bpack) >> 9;
-    return PyLong_FromLong(year);
-}
-
-static PyObject *
-Wrapper_month(PyObject *self, PyObject *args)
-{
-    long month = ((((xldt_WrapperObject *)self)->bpack) >> 5) & 0x0f;
-    return PyLong_FromLong(month);
-}
-
-static PyObject *
-Wrapper_day(PyObject *self, PyObject *args)
-{
-    long day = (((xldt_WrapperObject *)self)->bpack) & 0x1f;
-    return PyLong_FromLong(day);
-}
-
-static PyMethodDef Wrapper_methods[] = {
-    {"year", Wrapper_year, METH_NOARGS, Wrapper_year__doc__},
-    {"month", Wrapper_month, METH_NOARGS, Wrapper_month__doc__},
-    {"day", Wrapper_day, METH_NOARGS, Wrapper_day__doc__},
-    {NULL, NULL, 0, NULL}
-};
-
-static PyObject *
-Wrapper__new__(PyTypeObject *type, PyObject *args, PyObject *kwds)
-{
-    long day, month, year;
-    PyObject *self = type->tp_base->tp_new(type, args, kwds);
-    if (self != NULL) {
-        double value;
-        xldt_WrapperObject *p = (xldt_WrapperObject *)self;
-        value = PyFloat_AsDouble(self);
-        serial_to_date(x_floor(value), &year, &month, &day);
-        p->bpack = (year << 9) | (month << 5) | day;
-    }
-    return self;
-}
-
-static PyObject *
-Wrapper_create(PyObject *module)
-{
-    Wrapper_Type.tp_name = "_xldt.Wrapper";
-    Wrapper_Type.tp_base = &PyFloat_Type;
-    Wrapper_Type.tp_doc = Wrapper__doc__;
-    Wrapper_Type.tp_basicsize = sizeof(xldt_WrapperObject);
-    Wrapper_Type.tp_itemsize = 0;
-    Wrapper_Type.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
-    Wrapper_Type.tp_new = Wrapper__new__;
-    Wrapper_Type.tp_methods = Wrapper_methods;
-    if (PyType_Ready(&Wrapper_Type) < 0) {
-        return NULL;
-    }
-    Py_INCREF(&Wrapper_Type);
-    if (PyModule_AddObject(module, "Wrapper", 
-                           (PyObject *)&Wrapper_Type) < 0) 
-    {
-        Py_DECREF(&Wrapper_Type);
-        Py_DECREF(module);
-        return NULL;
-    }
-    return module;
-};
-
 static PyMethodDef xldt_methods[] = {
     {"date", xldt_date, METH_VARARGS, xldt_date__doc__},
     {"day", xldt_day, METH_VARARGS, xldt_day__doc__},
@@ -809,7 +732,7 @@ static struct PyModuleDef xldt_module = {
 static PyObject *
 xldt_create(void)
 {
-    xldt_module.m_name = "_xldt";
+    xldt_module.m_name = "xldt";
     xldt_module.m_doc = xldt__doc__;
     xldt_module.m_size = -1;
     xldt_module.m_methods = xldt_methods;
@@ -817,11 +740,9 @@ xldt_create(void)
 }
 
 PyMODINIT_FUNC 
-PyInit__xldt(void) {
+PyInit_xldt(void) {
     PyObject *xldt = xldt_create();
-    if (add_week_types(xldt) == NULL || 
-        add_weekend_types(xldt) == NULL ||
-        Wrapper_create(xldt) == NULL) 
+    if (add_week_types(xldt) == NULL || add_weekend_types(xldt) == NULL) 
     {
         return NULL;
     }
