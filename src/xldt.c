@@ -725,26 +725,31 @@ static PyMethodDef xldt_methods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-static struct PyModuleDef xldt_module = {
+static int
+xldt_exec(PyObject *module)
+{
+    if (add_week_types(module) == NULL || add_weekend_types(module) == NULL) 
+    {
+        return -1;
+    }
+    return 0;
+}
+
+static PyModuleDef_Slot xldt_slots[] = {
+    {Py_mod_exec, xldt_exec},
+    {0, NULL}
+};
+
+static PyModuleDef xldt_module = {
     PyModuleDef_HEAD_INIT
 };
 
-static PyObject *
-xldt_create(void)
-{
-    xldt_module.m_name = "xldt";
-    xldt_module.m_doc = xldt__doc__;
-    xldt_module.m_size = -1;
-    xldt_module.m_methods = xldt_methods;
-    return PyModule_Create(&xldt_module);
-}
-
 PyMODINIT_FUNC 
 PyInit_xldt(void) {
-    PyObject *xldt = xldt_create();
-    if (add_week_types(xldt) == NULL || add_weekend_types(xldt) == NULL) 
-    {
-        return NULL;
-    }
-    return xldt;
+    xldt_module.m_name = "xldt";
+    xldt_module.m_doc = xldt__doc__;
+    xldt_module.m_size = 0;
+    xldt_module.m_methods = xldt_methods;
+    xldt_module.m_slots = xldt_slots;
+    return PyModuleDef_Init(&xldt_module);
 }
